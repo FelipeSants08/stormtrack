@@ -1,0 +1,47 @@
+package com.fiap.stormtrack.service;
+
+import com.fiap.stormtrack.model.Alert;
+import com.fiap.stormtrack.model.SensorReading;
+import com.fiap.stormtrack.repository.AlertRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+public class AlertService {
+
+
+    private final AlertRepository alertRepository;
+
+    public void generatedAlertIfNeeded(SensorReading reading) {
+        double temp = reading.getTemperature();
+        double humidity = reading.getHumidity();
+
+        double indiceCalor = calcularIndiceCalor(temp, humidity);
+        String message = gerarAlerta(indiceCalor);
+
+        if (!message.equals("Seguro: condições normais.")) {
+            Alert alert = new Alert(null, reading, message, LocalDateTime.now());
+            alertRepository.save(alert);
+        }
+    }
+    public double calcularIndiceCalor(double temperatura, double umidade) {
+        return temperatura + 0.33 * umidade - 4.0;
+    }
+
+    public String gerarAlerta(double indiceCalor) {
+        if (indiceCalor >= 54) {
+            return "Emergência: risco extremo de vida!";
+        } else if (indiceCalor >= 41) {
+            return "Perigo: risco alto de doenças relacionadas ao calor!";
+        } else if (indiceCalor >= 33) {
+            return "Alerta: risco para saúde (desidratação, exaustão).";
+        } else if (indiceCalor >= 27) {
+            return "Atenção: desconforto térmico.";
+        } else {
+            return "Seguro: condições normais.";
+        }
+    }
+}
