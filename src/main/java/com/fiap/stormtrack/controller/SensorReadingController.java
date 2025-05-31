@@ -6,8 +6,10 @@ import com.fiap.stormtrack.model.Sensors;
 import com.fiap.stormtrack.repository.SensorReadingRepository;
 import com.fiap.stormtrack.repository.SensorsRepository;
 import com.fiap.stormtrack.service.AlertService;
+import com.fiap.stormtrack.service.SensorReadingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +22,18 @@ import java.util.List;
 @RestController
 @RequestMapping("sensor-readings")
 @RequiredArgsConstructor
-public class SensorsReadingController {
+public class SensorReadingController {
 
     private final SensorsRepository sensorsRepository;
     private final SensorReadingRepository repository;
     private final AlertService alertService;
+    private final SensorReadingService sensorReadingService;
 
     @GetMapping
-    public List<SensorReading> index() {
-        log.info("Buscando leituras");
-        return repository.findAll();
+    public ResponseEntity<Page<SensorReading>> index(@RequestParam int pagina,
+                                                     @RequestParam int item) {
+        log.info("Buscando leituras por página");
+        return ResponseEntity.ok(sensorReadingService.findAll(pagina, item));
     }
 
     @PostMapping
