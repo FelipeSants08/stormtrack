@@ -1,12 +1,12 @@
 package com.fiap.stormtrack.service;
 
 import com.fiap.stormtrack.model.Alert;
+import com.fiap.stormtrack.model.Classification;
 import com.fiap.stormtrack.model.SensorReading;
 import com.fiap.stormtrack.repository.AlertRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,9 +28,10 @@ public class AlertService {
 
         double indiceCalor = calcularIndiceCalor(temp, humidity);
         String message = gerarAlerta(indiceCalor);
+        Classification classification = determinarClassificacao(indiceCalor);
 
         if (!message.equals("Seguro: condições normais.")) {
-            Alert alert = new Alert(null, reading, message, LocalDateTime.now());
+            Alert alert = new Alert(null, reading, message,classification, LocalDateTime.now());
             alertRepository.save(alert);
         }
     }
@@ -49,6 +50,17 @@ public class AlertService {
             return "Atenção: desconforto térmico.";
         } else {
             return "Seguro: condições normais.";
+        }
+    }
+    public Classification determinarClassificacao(double indiceCalor) {
+        if (indiceCalor >= 54) {
+            return Classification.ALERTA_VERMELHO;
+        } else if (indiceCalor >= 41) {
+            return Classification.CUIDADO;
+        } else if (indiceCalor >= 33) {
+            return Classification.MODERADO;
+        } else {
+            return Classification.BOM_TEMPO;
         }
     }
 }

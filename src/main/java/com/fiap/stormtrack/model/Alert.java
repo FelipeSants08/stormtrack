@@ -22,6 +22,9 @@ public class Alert {
 
     private String message;
 
+    @Enumerated(EnumType.STRING)
+    private Classification classification;
+
     private LocalDateTime dateTime;
 
 }
