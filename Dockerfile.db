@@ -1,0 +1,14 @@
+FROM mysql:8.0
+
+# Cria um usuário não-root com UID/GID customizado
+RUN groupadd -g 1010 dbgroup && \
+    useradd -r -u 1010 -g dbgroup dbuser
+
+# Define diretório de trabalho
+WORKDIR /custom-db
+
+# Variável de ambiente
+ENV MYSQL_DATABASE=stormtrack
+
+# Porta para acesso externo
+EXPOSE 3306
