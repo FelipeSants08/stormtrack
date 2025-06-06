@@ -4,9 +4,11 @@ import com.fiap.stormtrack.model.Alert;
 import com.fiap.stormtrack.model.Classification;
 import com.fiap.stormtrack.model.SensorReading;
 import com.fiap.stormtrack.repository.AlertRepository;
+import com.fiap.stormtrack.specification.AlertSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,15 @@ public class AlertService {
 
     public Page<Alert> findAll(int pagina, int item) {
         return alertRepository.findAll(PageRequest.of(pagina, item));
+    }
+
+
+    public Page<Alert> findAllWithFilters(Classification classification,
+                                          LocalDateTime startDate,
+                                          LocalDateTime endDate,
+                                          Pageable pageable) {
+        var spec = AlertSpecification.withFilters(classification, startDate, endDate);
+        return alertRepository.findAll(spec, pageable);
     }
 
     public void generatedAlertIfNeeded(SensorReading reading) {

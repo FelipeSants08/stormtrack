@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.DELETE, "/user/**").hasAuthority("ADMIN")
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/alerts").permitAll()
@@ -56,13 +57,7 @@ public class SecurityConfig {
         return source;
     }
 
-    // @Bean
-    // UserDetailsService userDetailsService(){
-    // return new InMemoryUserDetailsManager(
-    // User.withUsername("joao").password("$2a$12$r3B.XzQX43dur19prADf3uMpt0SyOt5Cvl84A1JPB/ODMjHVx6Zn2").roles("ADMIN").build(),
-    // User.withUsername("maria").password("$2a$12$my3rVz0UR0iAnUU6J.ZT/OxsMQ2TtcKhkS7cytjxZd/cUY/.kIiv2").roles("USER").build()
-    // );
-    // }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
