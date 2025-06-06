@@ -7,6 +7,9 @@ import com.fiap.stormtrack.repository.SensorReadingRepository;
 import com.fiap.stormtrack.repository.SensorsRepository;
 import com.fiap.stormtrack.service.AlertService;
 import com.fiap.stormtrack.service.SensorReadingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "SensorsReading", description = "Leitura de sensores")
 @Slf4j
 @RestController
 @RequestMapping("sensor-readings")
@@ -29,6 +33,7 @@ public class SensorReadingController {
     private final AlertService alertService;
     private final SensorReadingService sensorReadingService;
 
+    @Operation(description = "Listar leituras por pagina", summary = "Lista de leituras")
     @GetMapping
     public ResponseEntity<Page<SensorReading>> index(@RequestParam int pagina,
                                                      @RequestParam int item) {
@@ -36,6 +41,8 @@ public class SensorReadingController {
         return ResponseEntity.ok(sensorReadingService.findAll(pagina, item));
     }
 
+    @Operation(responses = {
+            @ApiResponse(responseCode = "400", description = "Falha na validação")})
     @PostMapping
     public ResponseEntity<String> create(@RequestBody SensorReadingDTO dto) {
         log.info("Lendo sensor: {}", dto);
@@ -52,11 +59,17 @@ public class SensorReadingController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Leitura salva");
     }
+
     private Sensors getSensors(Long id) {
-        return sensorsRepository.findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND, "Sensor não encontrado"));
+        Sensors sensor = sensorsRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Sensor não encontrado"));
+
+        if (!Boolean.TRUE.equals(sensor.getActive())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sensor está inativo");
+        }
+
+        return sensor;
     }
 
 }

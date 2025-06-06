@@ -4,6 +4,10 @@ package com.fiap.stormtrack.controller;
 import com.fiap.stormtrack.model.Sensors;
 import com.fiap.stormtrack.model.User;
 import com.fiap.stormtrack.repository.SensorsRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Tag(name = "Sensores", description = "Operações de sensores")
 @RestController
 @RequestMapping("/sensors")
 @Slf4j
@@ -22,12 +27,19 @@ public class SensorController {
     @Autowired
     private SensorsRepository repository;
 
+    @Operation(summary = "Lista todos os sensores", description = "Retorna uma lista de sensores cadastrados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sucesso"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping
     public List<Sensors> index(@AuthenticationPrincipal User user) {
         log.info("Buscando todos os Sensores");
         return repository.findByUser(user);
     }
-
+    @Operation(responses = {
+            @ApiResponse(responseCode = "400", description = "Falha na validação")})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Sensors create(@RequestBody @Valid Sensors sensors, @AuthenticationPrincipal User user) {

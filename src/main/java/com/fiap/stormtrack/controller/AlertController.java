@@ -4,6 +4,8 @@ import com.fiap.stormtrack.model.Alert;
 import com.fiap.stormtrack.model.Classification;
 import com.fiap.stormtrack.repository.AlertRepository;
 import com.fiap.stormtrack.service.AlertService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "alerts", description = "Aparições de alertas climáticos")
 @RestController
 @RequestMapping("/alerts")
 public class AlertController {
@@ -25,11 +28,13 @@ public class AlertController {
     @Autowired
     private AlertService alertService;
 
+    @Operation(description = "Listar alertas por pagina", summary = "Lista de alertas")
     @GetMapping("/all")
     public Page<Alert> index(@RequestParam int pagina, int item) {
         return alertService.findAll(pagina, item);
     }
 
+    @Operation(description = "Listar alertas", tags = "alerts", summary = "Lista de alertas")
     @GetMapping
     public Page<Alert> index(
             @RequestParam(required = false) Classification classification,
