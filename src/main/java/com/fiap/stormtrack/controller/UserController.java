@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User user){
-        user.setRole(UserRole.ADMIN);
+        user.setRole(UserRole.USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repository.save(user);
     }
