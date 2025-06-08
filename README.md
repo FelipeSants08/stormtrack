@@ -92,10 +92,10 @@ mvn spring-boot:run
 ```
 http://localhost:8080/swagger-ui.html
 
-4. Login JWT
+4. Login JWT = POST= auth/login
 
-{
-  "email": "astrogildo@email.com",
-  "password": "72920"
-}
+{ "email": "felipe@email.com",
+ "password": "1234" }
+
+ E pegar o token na resposta!
 
