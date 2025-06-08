@@ -98,4 +98,14 @@ http://localhost:8080/swagger-ui.html
  "password": "1234" }
 
  E pegar o token na resposta!
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Poderão tambem testar no seguinte link, sem precisar baixar o projeto:
+
+ http://48.217.50.130:8080/swagger-ui/index.html#/
+
+Login - ADMIN
+ {
+  "email": "felipe.admin@fiap.com",
+  "password": "0810"
+}
 
