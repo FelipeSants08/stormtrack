@@ -68,11 +68,34 @@ O **StormTrack** é um sistema de backend que coleta leituras de sensores instal
 - Maven
 - Docker
 
-### 1. Build da aplicação
+### 1. Clone o projeto
 
 ```bash
-# Gere o .jar
-mvn clean install
+git clone https://github.com/FelipeSants08/stormtrack.git
+cd stormtrack
+```
 
-# Construa a imagem Docker da aplicação
-docker build -t stormtrack-app -f Dockerfile .
+### 2. Configure o banco de dados para rodar localmente
+
+application.properties
+
+spring.datasource.url=jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL
+spring.datasource.username=rm558916
+spring.datasource.password=081105
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+3. Build e execução
+
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+http://localhost:8080/swagger-ui.html
+
+4. Login JWT
+
+{
+  "email": "astrogildo@email.com",
+  "password": "72920"
+}
+
