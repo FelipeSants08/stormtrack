@@ -109,3 +109,25 @@ Login - ADMIN
   "password": "0810"
 }
 
+Testes:
+POST SENSORS
+{
+	"name": "Sensor-SP",
+	"location" : "Jundiaí - SP"
+}
+
+PUT SENSORS
+{
+	"name": "Puttt",
+	"location" : "Jaguaré - SP",
+	"active" : true
+}
+
+POST SENSOR_READING:
+{
+	 "sensorId": 2,
+  "temperature": 52.5,
+  "humidity": 48.2
+}
+
+
